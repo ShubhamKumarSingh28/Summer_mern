@@ -200,11 +200,9 @@ function LinksDashboard() {
         <div className="container py-4">
             <div className="d-flex justify-content-between mb-3">
                 <h2>Manage Affiliate Links</h2>
-                {permission.canCreateLink && (
-                    <button className="btn btn-primary btn-sm" onClick={() => handleOpenModal(false)}>
-                        Add
-                    </button>
-                )}
+                <button className="btn btn-primary btn-sm" onClick={() => handleOpenModal(false)}>
+                    Add
+                </button>
             </div>
 
             {errors.message && (
@@ -226,13 +224,12 @@ function LinksDashboard() {
                     pageSizeOptions={[20, 50, 100]}
                     disableRowSelectionOnClick
                     showToolbar
-                    sx={{
-                        fontFamily: 'inherit'
-                    }}
+                    sx={{ fontFamily: 'inherit' }}
                     density='compact'
                 />
             </div>
 
+            {/* Add/Edit Modal */}
             <Modal show={showModal} onHide={() => handleCloseModal()}>
                 <Modal.Header closeButton>
                     <Modal.Title>

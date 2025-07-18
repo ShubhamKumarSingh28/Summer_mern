@@ -1,12 +1,4 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Card
-} from "react-bootstrap";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
 import { SET_USER } from "../redux/user/actions";
@@ -77,94 +69,85 @@ function Register() {
   };
 
   return (
-    <section className="ezy__signin6 light d-flex">
-      <Container>
-        <Row className="justify-content-between h-100">
-          <Col lg={6}>
-            <div
-              className="ezy__signin6-bg-holder d-none d-lg-block h-100"
-              style={{
-                backgroundImage: "url(https://cdn.easyfrontend.com/pictures/sign-in-up/sign1.jpg)"
-              }}
-            />
-          </Col>
-          <Col lg={5} className="py-5">
-            <Row className="align-items-center h-100">
-              <Col xs={12}>
-                <Card className="ezy__signin6-form-card">
-                  <Card.Body className="p-0">
-                    <h2 className="ezy__signin6-heading mb-3">Create a New Account</h2>
-                    <p className="mb-4 mb-md-5">
-                      <span className="mb-0 opacity-50 lh-1">Already have an account?</span>
-                      <Button variant="link" className="py-0 text-dark text-decoration-none">
-                        Login
-                      </Button>
-                    </p>
+    <section style={{ background: 'var(--background)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="container" style={{ maxWidth: 440, width: '100%' }}>
+        <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', padding: '2.5rem 2rem', margin: '0 auto' }}>
+          <h2 style={{ color: 'var(--primary-dark)', fontWeight: 800, fontSize: '2rem', marginBottom: 24, textAlign: 'center' }}>Create a New Account</h2>
+          <p style={{ textAlign: 'center', color: 'var(--text-light)', marginBottom: 28, fontSize: '1rem' }}>
+            Already have an account?{' '}
+            <a href="/login" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>Login</a>
+          </p>
 
-                    {errors.message && (
-                      <div className="alert alert-danger">{errors.message}</div>
-                    )}
+          {errors.message && (
+            <div style={{ background: '#fee2e2', color: '#991b1b', borderRadius: '8px', padding: '1em', marginBottom: '1.5em', fontWeight: 500, border: '1px solid #fecaca', textAlign: 'center' }}>{errors.message}</div>
+          )}
 
-                    <Form noValidate validated={validated} onSubmit={handleSubmit} className="pe-md-4">
-                      <Form.Group className="mb-3">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                          type="text"
-                          placeholder="Enter your name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          isInvalid={!!errors.name}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
-                      </Form.Group>
+          <form onSubmit={handleSubmit} noValidate>
+            <div style={{ marginBottom: 18 }}>
+              <label htmlFor="name" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>Name</label>
+              <input
+                type="text"
+                name="name"
+                style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: errors.name ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', marginBottom: 0, background: '#fff', color: 'var(--text)' }}
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+              />
+              {errors.name && (
+                <div style={{ color: '#ef4444', fontSize: '0.97rem', marginTop: 4 }}>{errors.name}</div>
+              )}
+            </div>
 
-                      <Form.Group className="mb-3">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control
-                          type="text"
-                          placeholder="Enter username"
-                          name="username"
-                          value={formData.username}
-                          onChange={handleChange}
-                          isInvalid={!!errors.username}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
-                      </Form.Group>
+            <div style={{ marginBottom: 18 }}>
+              <label htmlFor="username" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>Username</label>
+              <input
+                type="text"
+                name="username"
+                style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: errors.username ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', marginBottom: 0, background: '#fff', color: 'var(--text)' }}
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Enter username"
+              />
+              {errors.username && (
+                <div style={{ color: '#ef4444', fontSize: '0.97rem', marginTop: 4 }}>{errors.username}</div>
+              )}
+            </div>
 
-                      <Form.Group className="mb-3">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                          type="password"
-                          placeholder="Enter password"
-                          name="password"
-                          value={formData.password}
-                          onChange={handleChange}
-                          isInvalid={!!errors.password}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
-                      </Form.Group>
+            <div style={{ marginBottom: 18 }}>
+              <label htmlFor="password" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>Password</label>
+              <input
+                type="password"
+                name="password"
+                style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: errors.password ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', marginBottom: 0, background: '#fff', color: 'var(--text)' }}
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter password"
+              />
+              {errors.password && (
+                <div style={{ color: '#ef4444', fontSize: '0.97rem', marginTop: 4 }}>{errors.password}</div>
+              )}
+            </div>
 
-                      <Button variant="" type="submit" className="ezy__signin6-btn-submit w-100">
-                        Register
-                      </Button>
-                    </Form>
+            <div style={{ marginBottom: 22 }}>
+              <button type="submit" className="cta-btn" style={{ width: '100%' }}>
+                Register
+              </button>
+            </div>
 
-                    <div className="position-relative ezy__signin6-or-separator">
-                      <hr className="my-4 my-md-5" />
-                      <span className="px-2">Or</span>
-                    </div>
+            <div style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)', fontSize: '0.98rem', marginBottom: 18 }}>
+              <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--border)' }} />
+              <span style={{ padding: '0 10px' }}>OR</span>
+              <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--border)' }} />
+            </div>
 
-                    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-                      <GoogleLogin onSuccess={handleGoogleSignin} onError={() => setErrors({ message: 'Google Sign-in failed' })} />
-                    </GoogleOAuthProvider>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Container>
+            <div style={{ textAlign: 'center', marginBottom: 10 }}>
+              <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+                <GoogleLogin onSuccess={handleGoogleSignin} onError={() => setErrors({ message: 'Google Sign-in failed' })} width="100%" theme="filled_blue"/>
+              </GoogleOAuthProvider>
+            </div>
+          </form>
+        </div>
+      </div>
     </section>
   );
 }

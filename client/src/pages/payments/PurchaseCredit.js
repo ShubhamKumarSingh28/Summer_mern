@@ -97,96 +97,66 @@ function PurchaseCredit() {
     };
 
     return (
-        <section className="ezy__pricing10 light py-5" id="ezy__pricing10">
-            <div className="container">
-                {errors.message && <div className="alert alert-danger">{errors.message}</div>}
-                {message && <div className="alert alert-success">{message}</div>}
+        <section style={{ background: 'var(--background)', minHeight: '80vh', padding: '3rem 0' }}>
+            <div className="container" style={{ maxWidth: 1100 }}>
+                {errors.message && <div style={{ background: '#fee2e2', color: '#991b1b', borderRadius: '8px', padding: '1em', marginBottom: '1.5em', fontWeight: 500, border: '1px solid #fecaca' }}>{errors.message}</div>}
+                {message && <div style={{ background: '#d1fae5', color: '#065f46', borderRadius: '8px', padding: '1em', marginBottom: '1.5em', fontWeight: 500, border: '1px solid #6ee7b7' }}>{message}</div>}
 
-                <div className="d-flex justify-content-between align-items-start w-100">
-                    <div className="text-left">
-                        <h3 className="ezy__pricing10-heading">Choose Plan</h3>
-                        <p className="ezy__pricing10-sub-heading mt-3">
-                            Flexible options: one-time credits or recurring subscriptions.
-                        </p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
+                    <div>
+                        <h2 style={{ color: 'var(--primary-dark)', fontWeight: 800, fontSize: '2rem', marginBottom: 8 }}>Choose Plan</h2>
+                        <p style={{ color: 'var(--text-light)', fontSize: '1.1rem', margin: 0 }}>Flexible options: one-time credits or recurring subscriptions.</p>
                     </div>
-
-                    <div className="text-right">
-                        <h3>Current Balance</h3>
-                        <p className="ezy__pricing10-sub-heading mt-3">
-                            {userDetails.credits} Credits
-                        </p>
+                    <div style={{ textAlign: 'right' }}>
+                        <h3 style={{ color: 'var(--primary-dark)', fontWeight: 700, marginBottom: 0 }}>Current Balance</h3>
+                        <p style={{ color: 'var(--primary)', fontSize: '1.2rem', fontWeight: 700 }}>{userDetails.credits} Credits</p>
                     </div>
                 </div>
 
-
-                <div className="row">
+                <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                     {/* Credit Pack Card */}
-                    <div className="col-md-6 col-xl-4 mt-4 text-center">
-                        <div className="card ezy__pricing10-card p-4 border-0 rounded-0">
-                            <div className="card-body pt-4">
-                                <p className="ezy__pricing10-meta-price">
-                                    <span className="ezy__pricing10-rate">Credit Packs</span>
-                                </p>
-                            </div>
-                            <div className="card-body pb-4 p-0">
-                                <ul className="nav ezy__pricing10-nav flex-column">
-                                    {CREDIT_PACKS.map(c => (
-                                        <li className="pb-2" key={c}>
-                                            {c} CREDITS FOR ₹{c}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-                                    Buy Credits
-                                </button>
-                            </div>
-                        </div>
+                    <div style={{ flex: '1 1 300px', maxWidth: 340, background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', border: '1px solid var(--border)', padding: '2rem', textAlign: 'center' }}>
+                        <div style={{ marginBottom: '1.2rem', color: 'var(--primary)', fontWeight: 700, fontSize: '1.2rem' }}>Credit Packs</div>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.2rem 0', color: 'var(--text-light)', fontSize: '1.05rem' }}>
+                            {CREDIT_PACKS.map(c => (
+                                <li style={{ paddingBottom: 6 }} key={c}>
+                                    {c} CREDITS FOR ₹{c}
+                                </li>
+                            ))}
+                        </ul>
+                        <button className="cta-btn" onClick={() => setShowModal(true)}>
+                            Buy Credits
+                        </button>
                     </div>
 
                     {/* Monthly Plan */}
-                    <div className="col-md-6 col-xl-4 mt-4 text-center">
-                        <div className="card ezy__pricing10-card p-4 border-0 rounded-0">
-                            <div className="card-body pt-4">
-                                <p className="ezy__pricing10-meta-price">
-                                    <span className="ezy__pricing10-rate">₹199/month</span>
-                                </p>
-                            </div>
-                            <div className="card-body pb-4 p-0">
-                                <ul className="nav ezy__pricing10-nav flex-column">
-                                    {pricingList[1].list.map((item, i) => (
-                                        <li className="pb-2" key={i}>{item.detail}</li>
-                                    ))}
-                                </ul>
-                                <button className="btn btn-primary" onClick={() => handleSubscribe('UNLIMITED_MONTHLY')}>
-                                    Subscribe Monthly
-                                </button>
-                            </div>
-                        </div>
+                    <div style={{ flex: '1 1 300px', maxWidth: 340, background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', border: '1px solid var(--border)', padding: '2rem', textAlign: 'center' }}>
+                        <div style={{ marginBottom: '1.2rem', color: 'var(--primary)', fontWeight: 700, fontSize: '1.2rem' }}>₹199/month</div>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.2rem 0', color: 'var(--text-light)', fontSize: '1.05rem' }}>
+                            {pricingList[1].list.map((item, i) => (
+                                <li style={{ paddingBottom: 6 }} key={i}>{item.detail}</li>
+                            ))}
+                        </ul>
+                        <button className="cta-btn" onClick={() => handleSubscribe('UNLIMITED_MONTHLY')}>
+                            Subscribe Monthly
+                        </button>
                     </div>
 
                     {/* Yearly Plan */}
-                    <div className="col-md-6 col-xl-4 mt-4 text-center">
-                        <div className="card ezy__pricing10-card p-4 border-0 rounded-0">
-                            <div className="card-body pt-4">
-                                <p className="ezy__pricing10-meta-price">
-                                    <span className="ezy__pricing10-rate">₹1990/year</span>
-                                </p>
-                            </div>
-                            <div className="card-body pb-4 p-0">
-                                <ul className="nav ezy__pricing10-nav flex-column">
-                                    {pricingList[2].list.map((item, i) => (
-                                        <li className="pb-2" key={i}>{item.detail}</li>
-                                    ))}
-                                </ul>
-                                <button className="btn btn-primary" onClick={() => handleSubscribe('UNLIMITED_YEARLY')}>
-                                    Subscribe Yearly
-                                </button>
-                            </div>
-                        </div>
+                    <div style={{ flex: '1 1 300px', maxWidth: 340, background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', border: '1px solid var(--border)', padding: '2rem', textAlign: 'center' }}>
+                        <div style={{ marginBottom: '1.2rem', color: 'var(--primary)', fontWeight: 700, fontSize: '1.2rem' }}>₹1990/year</div>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.2rem 0', color: 'var(--text-light)', fontSize: '1.05rem' }}>
+                            {pricingList[2].list.map((item, i) => (
+                                <li style={{ paddingBottom: 6 }} key={i}>{item.detail}</li>
+                            ))}
+                        </ul>
+                        <button className="cta-btn" onClick={() => handleSubscribe('UNLIMITED_YEARLY')}>
+                            Subscribe Yearly
+                        </button>
                     </div>
                 </div>
 
-                {/* React-Bootstrap Modal */}
+                {/* Modal for buying credits */}
                 <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                     <Modal.Header closeButton>
                         <Modal.Title>Buy Credits</Modal.Title>
@@ -195,7 +165,7 @@ function PurchaseCredit() {
                         {CREDIT_PACKS.map((c) => (
                             <button
                                 key={c}
-                                className="m-2 btn btn-outline-primary"
+                                style={{ margin: 8, border: '1.5px solid var(--primary)', color: 'var(--primary)', background: '#fff', borderRadius: 8, padding: '0.6em 1.4em', fontWeight: 600, fontSize: '1rem', cursor: 'pointer', transition: 'all 0.2s' }}
                                 onClick={() => handleBuyCredits(c)}
                             >
                                 Buy {c} Credits

@@ -100,33 +100,38 @@ function AnalyticsDashboard() {
     }, [analyticsData, fromDate, toDate]);
 
     return (
-        <div className="container py-5">
-            <h1>Analytics for LinkID: {id}</h1>
+        <div className="container" style={{ padding: '2.5rem 0', maxWidth: 1100 }}>
+            <h2 style={{ color: 'var(--primary-dark)', fontWeight: 800, fontSize: '2.1rem', marginBottom: '2rem', letterSpacing: '-1px' }}>
+                Analytics for LinkID: {id}
+            </h2>
 
-            <div className="row mb-4 mx-0 border py-3 border">
-                <h5>Filters:</h5>
-                <div className="col-md-2">
+            {/* Filters */}
+            <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', border: '1px solid var(--border)', padding: '1.5rem 2rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+                <div style={{ fontWeight: 700, color: 'var(--primary-dark)', fontSize: '1.1rem', marginRight: 18 }}>Filters:</div>
+                <div style={{ minWidth: 180 }}>
                     <DatePicker
                         selected={fromDate}
                         onChange={(date) => setFromDate(date)}
                         className="form-control"
                         placeholderText="From (Date)"
+                        style={{ width: '100%', padding: '0.6em 1em', borderRadius: 'var(--radius)', border: '1.5px solid var(--border)', fontSize: '1rem', background: '#fff', color: 'var(--text)' }}
                     />
                 </div>
-                <div className="col-md-2">
+                <div style={{ minWidth: 180 }}>
                     <DatePicker
                         selected={toDate}
                         onChange={(date) => setToDate(date)}
                         className="form-control"
                         placeholderText="To (Date)"
+                        style={{ width: '100%', padding: '0.6em 1em', borderRadius: 'var(--radius)', border: '1.5px solid var(--border)', fontSize: '1rem', background: '#fff', color: 'var(--text)' }}
                     />
                 </div>
             </div>
 
-            <div className="row mb-4 mx-0 border py-3 rounded">
-                <div className="col-md-8 p-3 rounded mt-2">
-                    <h5>Clicks by City</h5>
-                    <hr />
+            {/* Charts */}
+            <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
+                <div style={{ flex: '2 1 400px', background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', border: '1px solid var(--border)', padding: '2rem', minWidth: 320 }}>
+                    <h4 style={{ color: 'var(--primary-dark)', fontWeight: 700, marginBottom: 12 }}>Clicks by City</h4>
                     <Bar
                         data={{
                             labels: Object.keys(clicksByCity),
@@ -134,18 +139,15 @@ function AnalyticsDashboard() {
                                 {
                                     label: 'Clicks',
                                     data: Object.values(clicksByCity),
-                                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                    backgroundColor: 'rgba(37, 99, 235, 0.6)',
                                 }
                             ]
                         }}
                         options={{ responsive: true }}
-
                     />
                 </div>
-
-                <div className="col-md-4 p-3 rounded mt-2">
-                    <h5>Clicks by Browser</h5>
-                    <hr />
+                <div style={{ flex: '1 1 260px', background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', border: '1px solid var(--border)', padding: '2rem', minWidth: 260 }}>
+                    <h4 style={{ color: 'var(--primary-dark)', fontWeight: 700, marginBottom: 12 }}>Clicks by Browser</h4>
                     <Pie
                         data={{
                             labels: Object.keys(clicksByBrowser),
@@ -153,8 +155,8 @@ function AnalyticsDashboard() {
                                 {
                                     data: Object.values(clicksByCity),
                                     backgroundColor: [
-                                        '#FF6384',
-                                        '#36A2EB',
+                                        'var(--primary)',
+                                        'var(--accent)',
                                         '#FFCE56',
                                         '#4BC0C0',
                                         '#9966FF',
@@ -168,22 +170,43 @@ function AnalyticsDashboard() {
                 </div>
             </div>
 
-            <DataGrid
-                getRowId={(row) => row._id}
-                rows={analyticsData}
-                columns={columns}
-                initialState={{
-                    pagination: {
-                        paginationModel: { pageSize: 20, page: 0 }
-                    }
-                }}
-                pageSizeOptions={[20, 50, 100]}
-                disableRowSelectionOnClick
-                showToolbar
-                sx={{
-                    fontFamily: 'inherit'
-                }}
-            />
+            {/* Data Table */}
+            <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', border: '1px solid var(--border)', padding: '2rem', marginBottom: '2rem' }}>
+                <DataGrid
+                    getRowId={(row) => row._id}
+                    rows={analyticsData}
+                    columns={columns}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { pageSize: 20, page: 0 }
+                        }
+                    }}
+                    pageSizeOptions={[20, 50, 100]}
+                    disableRowSelectionOnClick
+                    showToolbar
+                    sx={{
+                        fontFamily: 'inherit',
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--text)',
+                        '.MuiDataGrid-columnHeaders': {
+                            background: 'var(--background)',
+                            color: 'var(--primary-dark)',
+                            fontWeight: 700,
+                            fontSize: '1.05rem',
+                        },
+                        '.MuiDataGrid-row': {
+                            background: '#fff',
+                        },
+                        '.MuiDataGrid-cell': {
+                            borderBottom: '1px solid var(--border)',
+                        },
+                        '.MuiDataGrid-footerContainer': {
+                            background: 'var(--background)',
+                        },
+                    }}
+                />
+            </div>
         </div>
     );
 }

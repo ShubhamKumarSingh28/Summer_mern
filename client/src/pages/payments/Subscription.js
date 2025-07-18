@@ -43,46 +43,27 @@ function Subscription() {
     };
 
     return (
-        <div className="container py-5">
-            {errors.message && <div className="alert alert-danger">{errors.message}</div>}
-            {message && <div className="alert alert-success">{message}</div>}
+        <div style={{ background: 'var(--background)', minHeight: '80vh', padding: '3rem 0' }}>
+            <div className="container" style={{ maxWidth: 500 }}>
+                {errors.message && <div style={{ background: '#fee2e2', color: '#991b1b', borderRadius: '8px', padding: '1em', marginBottom: '1.5em', fontWeight: 500, border: '1px solid #fecaca' }}>{errors.message}</div>}
+                {message && <div style={{ background: '#d1fae5', color: '#065f46', borderRadius: '8px', padding: '1em', marginBottom: '1.5em', fontWeight: 500, border: '1px solid #6ee7b7' }}>{message}</div>}
 
-            <div className="row justify-content-center">
-                <div className="col-5">
-                    <div className="card w-100 mb-3">
-                        <div className="card-body">
-                            <h3 className="card-title">Subscription Summary</h3>
-                            <hr />
-                            <p className="card-text">
-                                <div className="pb-2">
-                                    <strong>Start Date: </strong> {formatDate(subscription.start)}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>End Date: </strong> {formatDate(subscription.end)}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>Last Payment Date: </strong> {formatDate(subscription.lastBillDate)}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>Next Payment Date: </strong> {formatDate(subscription.nextBillDate)}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>Total Payments Made: </strong> {subscription.paymentsMade}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>Payments Remaining: </strong> {subscription.paymentsRemaining}
-                                </div>
-                            </p>
-                            <hr />
-                            <div className="text-center">
-                                <button className="btn btn-danger w-50" onClick={() => handleCancel()}>Cancel</button>
-                            </div>
-                        </div>
+                <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', border: '1px solid var(--border)', padding: '2.5rem 2rem', margin: '0 auto' }}>
+                    <h2 style={{ color: 'var(--primary-dark)', fontWeight: 800, fontSize: '1.7rem', marginBottom: 16, textAlign: 'center' }}>Subscription Summary</h2>
+                    <hr style={{ borderColor: 'var(--border)' }} />
+                    <div style={{ color: 'var(--text)', fontSize: '1.08rem', marginBottom: 18 }}>
+                        <div style={{ paddingBottom: 8 }}><strong>Start Date:</strong> {formatDate(subscription.start)}</div>
+                        <div style={{ paddingBottom: 8 }}><strong>End Date:</strong> {formatDate(subscription.end)}</div>
+                        <div style={{ paddingBottom: 8 }}><strong>Last Payment Date:</strong> {formatDate(subscription.lastBillDate)}</div>
+                        <div style={{ paddingBottom: 8 }}><strong>Next Payment Date:</strong> {formatDate(subscription.nextBillDate)}</div>
+                        <div style={{ paddingBottom: 8 }}><strong>Total Payments Made:</strong> {subscription.paymentsMade}</div>
+                        <div style={{ paddingBottom: 8 }}><strong>Payments Remaining:</strong> {subscription.paymentsRemaining}</div>
+                    </div>
+                    <hr style={{ borderColor: 'var(--border)' }} />
+                    <div style={{ textAlign: 'center', marginTop: 24 }}>
+                        <button style={{ background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8, padding: '0.7em 2em', fontWeight: 700, fontSize: '1.08rem', cursor: 'pointer', transition: 'background 0.2s' }} onClick={() => handleCancel()}>
+                            Cancel Subscription
+                        </button>
                     </div>
                 </div>
             </div>

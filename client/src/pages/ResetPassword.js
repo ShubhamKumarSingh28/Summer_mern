@@ -12,25 +12,56 @@ function ResetPassword({ email: emailProp = "", hideEmailField = false, onSucces
     const [formData, setFormData] = useState({
         email: emailFromState,
         code: "",
-        newPassword: ""
+        newPassword: "",
+        confirmPassword: ""
     });
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+    const [passwordMatchError, setPasswordMatchError] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const updatedForm = { ...formData, [name]: value };
+        setFormData(updatedForm);
+        setError("");
+        setMessage("");
+        // Show password mismatch error as user types
+        if ((name === "newPassword" || name === "confirmPassword") && updatedForm.confirmPassword) {
+            if (updatedForm.newPassword !== updatedForm.confirmPassword) {
+                setPasswordMatchError("Passwords do not match.");
+            } else {
+                setPasswordMatchError("");
+            }
+        }
+    };
+
+    const isFormValid = () => {
+        if (!shouldHideEmail && !formData.email) return false;
+        if (!formData.code) return false;
+        if (!formData.newPassword) return false;
+        if (!formData.confirmPassword) return false;
+        if (formData.newPassword !== formData.confirmPassword) return false;
+        return true;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Frontend validation
-        if (!formData.email || !formData.code || !formData.newPassword) {
-            setError("Please fill in all fields.");
+        if (!isFormValid()) {
+            if (!formData.email || !formData.code || !formData.newPassword || !formData.confirmPassword) {
+                setError("Please fill in all fields.");
+            } else if (formData.newPassword !== formData.confirmPassword) {
+                setError("Passwords do not match.");
+            }
             return;
         }
+        setSubmitting(true);
         try {
-            await axios.post(`${serverEndpoint}/auth/reset-password`, formData);
+            await axios.post(`${serverEndpoint}/auth/reset-password`, {
+                email: formData.email,
+                code: formData.code,
+                newPassword: formData.newPassword
+            });
             setMessage("Password reset successful.");
             setError("");
             setTimeout(() => {
@@ -43,32 +74,79 @@ function ResetPassword({ email: emailProp = "", hideEmailField = false, onSucces
         } catch (err) {
             let backendMsg = err?.response?.data?.message;
             setError(backendMsg || "Failed to reset password. Check code or try again.");
+        } finally {
+            setSubmitting(false);
         }
     };
 
     return (
-        <div className="container mt-5 col-md-4">
-            <h3>Reset Password</h3>
-            {message && <div className="alert alert-success">{message}</div>}
-            {error && <div className="alert alert-danger">{error}</div>}
-            <form onSubmit={handleSubmit}>
-                {!shouldHideEmail && (
-                    <div className="mb-3">
-                        <label>Email</label>
-                        <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} />
-                    </div>
-                )}
-                <div className="mb-3">
-                    <label>Reset Code</label>
-                    <input type="text" className="form-control" name="code" value={formData.code} onChange={handleChange} />
+        <section style={{ background: 'var(--background)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="container" style={{ maxWidth: 420, width: '100%' }}>
+                <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', padding: '2.5rem 2rem', margin: '0 auto' }}>
+                    <h2 style={{ color: 'var(--primary-dark)', fontWeight: 800, fontSize: '2rem', marginBottom: 24, textAlign: 'center' }}>Reset Password</h2>
+                    {message && <div style={{ background: '#d1fae5', color: '#065f46', borderRadius: '8px', padding: '1em', marginBottom: '1.5em', fontWeight: 500, border: '1px solid #6ee7b7', textAlign: 'center' }}>{message}</div>}
+                    {error && <div style={{ background: '#fee2e2', color: '#991b1b', borderRadius: '8px', padding: '1em', marginBottom: '1.5em', fontWeight: 500, border: '1px solid #fecaca', textAlign: 'center' }}>{error}</div>}
+                    {passwordMatchError && (
+                        <div style={{ background: '#fee2e2', color: '#991b1b', borderRadius: '8px', padding: '1em', marginBottom: '1em', fontWeight: 500, border: '1px solid #fecaca', textAlign: 'center' }}>{passwordMatchError}</div>
+                    )}
+                    <form onSubmit={handleSubmit} noValidate>
+                        {!shouldHideEmail && (
+                            <div style={{ marginBottom: 18 }}>
+                                <label htmlFor="email" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>Email</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: error && !formData.email ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', background: '#fff', color: 'var(--text)' }}
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Enter your email"
+                                />
+                            </div>
+                        )}
+                        <div style={{ marginBottom: 18 }}>
+                            <label htmlFor="code" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>Reset Code</label>
+                            <input
+                                id="code"
+                                type="text"
+                                name="code"
+                                style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: error && !formData.code ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', background: '#fff', color: 'var(--text)' }}
+                                value={formData.code}
+                                onChange={handleChange}
+                                placeholder="Enter the reset code"
+                            />
+                        </div>
+                        <div style={{ marginBottom: 22 }}>
+                            <label htmlFor="newPassword" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>New Password</label>
+                            <input
+                                id="newPassword"
+                                type="password"
+                                name="newPassword"
+                                style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: error && !formData.newPassword ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', background: '#fff', color: 'var(--text)' }}
+                                value={formData.newPassword}
+                                onChange={handleChange}
+                                placeholder="Enter your new password"
+                            />
+                        </div>
+                        <div style={{ marginBottom: 22 }}>
+                            <label htmlFor="confirmPassword" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>Confirm New Password</label>
+                            <input
+                                id="confirmPassword"
+                                type="password"
+                                name="confirmPassword"
+                                style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: error && !formData.confirmPassword ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', background: '#fff', color: 'var(--text)' }}
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                placeholder="Confirm your new password"
+                            />
+                        </div>
+                        <button type="submit" className="cta-btn" style={{ width: '100%' }} disabled={!isFormValid() || submitting}>
+                            {submitting ? 'Resetting...' : 'Reset Password'}
+                        </button>
+                    </form>
                 </div>
-                <div className="mb-3">
-                    <label>New Password</label>
-                    <input type="password" className="form-control" name="newPassword" value={formData.newPassword} onChange={handleChange} />
-                </div>
-                <button className="btn btn-primary w-100">Reset Password</button>
-            </form>
-        </div>
+            </div>
+        </section>
     );
 }
 export default ResetPassword;

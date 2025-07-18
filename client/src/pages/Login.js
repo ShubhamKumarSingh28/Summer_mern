@@ -85,85 +85,77 @@ function Login() {
   };
 
   return (
-    <section className="bg-light min-vh-100 d-flex align-items-center">
-      <div className="container py-5">
-        <div className="row justify-content-center">
-          <div className="col-md-6 col-lg-5">
-            <div className="bg-white shadow p-4 p-sm-5 rounded-4">
-              <h2 className="mb-4 text-center">Login</h2>
+    <section style={{ background: 'var(--background)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="container" style={{ maxWidth: 420, width: '100%' }}>
+        <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', padding: '2.5rem 2rem', margin: '0 auto' }}>
+          <h2 style={{ color: 'var(--primary-dark)', fontWeight: 800, fontSize: '2rem', marginBottom: 24, textAlign: 'center' }}>Login</h2>
 
-              {errors.message && (
-                <div className="alert alert-danger">{errors.message}</div>
+          {errors.message && (
+            <div style={{ background: '#fee2e2', color: '#991b1b', borderRadius: '8px', padding: '1em', marginBottom: '1.5em', fontWeight: 500, border: '1px solid #fecaca', textAlign: 'center' }}>{errors.message}</div>
+          )}
+
+          <form onSubmit={handleSubmit} noValidate>
+            <div style={{ marginBottom: 18 }}>
+              <label htmlFor="username" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>Username</label>
+              <input
+                type="text"
+                name="username"
+                style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: errors.username ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', marginBottom: 0, background: '#fff', color: 'var(--text)' }}
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="Enter your username"
+              />
+              {errors.username && (
+                <div style={{ color: '#ef4444', fontSize: '0.97rem', marginTop: 4 }}>{errors.username}</div>
               )}
-
-              <form onSubmit={handleSubmit} noValidate>
-                <div className="mb-3">
-                  <label htmlFor="username" className="form-label">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    name="username"
-                    className={`form-control ${errors.username ? "is-invalid" : ""}`}
-                    value={formData.username}
-                    onChange={handleChange}
-                    placeholder="Enter your username"
-                  />
-                  {errors.username && (
-                    <div className="invalid-feedback">{errors.username}</div>
-                  )}
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    className={`form-control ${errors.password ? "is-invalid" : ""}`}
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Enter your password"
-                  />
-                  {errors.password && (
-                    <div className="invalid-feedback">{errors.password}</div>
-                  )}
-                </div>
-
-                <div className="mb-3 text-end">
-                  <a href="/forget-password" className="text-decoration-none">
-                    Forgot Password?
-                  </a>
-                </div>
-
-                <div className="d-grid mb-3">
-                  <button type="submit" className="btn btn-primary btn-lg">
-                    Login
-                  </button>
-                </div>
-
-                <div className="d-flex align-items-center text-muted mb-3">
-                  <hr className="flex-grow-1" />
-                  <span className="px-2">OR</span>
-                  <hr className="flex-grow-1" />
-                </div>
-
-                <div className="text-center">
-                  <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-                    <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
-                  </GoogleOAuthProvider>
-                </div>
-
-                <p className="text-center mt-4 mb-0">
-                  Don't have an account?{" "}
-                  <a href="/register" className="text-primary fw-semibold">
-                    Register
-                  </a>
-                </p>
-              </form>
             </div>
-          </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <label htmlFor="password" style={{ display: 'block', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: 6 }}>Password</label>
+              <input
+                type="password"
+                name="password"
+                style={{ width: '100%', padding: '0.7em 1em', borderRadius: 'var(--radius)', border: errors.password ? '1.5px solid #ef4444' : '1.5px solid var(--border)', fontSize: '1rem', marginBottom: 0, background: '#fff', color: 'var(--text)' }}
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+              />
+              {errors.password && (
+                <div style={{ color: '#ef4444', fontSize: '0.97rem', marginTop: 4 }}>{errors.password}</div>
+              )}
+            </div>
+
+            <div style={{ marginBottom: 18, textAlign: 'right' }}>
+              <a href="/forget-password" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 500, fontSize: '0.98rem' }}>
+                Forgot Password?
+              </a>
+            </div>
+
+            <div style={{ marginBottom: 22 }}>
+              <button type="submit" className="cta-btn" style={{ width: '100%' }}>
+                Login
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)', fontSize: '0.98rem', marginBottom: 18 }}>
+              <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--border)' }} />
+              <span style={{ padding: '0 10px' }}>OR</span>
+              <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--border)' }} />
+            </div>
+
+            <div style={{ textAlign: 'center', marginBottom: 10 }}>
+              <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+                <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} width="100%" theme="filled_blue"/>
+              </GoogleOAuthProvider>
+            </div>
+
+            <p style={{ textAlign: 'center', marginTop: 24, marginBottom: 0, color: 'var(--text-light)', fontSize: '1rem' }}>
+              Don't have an account?{' '}
+              <a href="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>
+                Register
+              </a>
+            </p>
+          </form>
         </div>
       </div>
     </section>
