@@ -1,193 +1,172 @@
-import { useState } from "react";
-import axios from 'axios';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { serverEndpoint } from "../config/config";
+import React, { useState } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Card
+} from "react-bootstrap";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
 import { SET_USER } from "../redux/user/actions";
+import axios from "axios";
+import { serverEndpoint } from "../config/config";
 
 function Register() {
-    const dispatch = useDispatch();
-    const [formData, setFormData] = useState({
-        username: "",
-        password: "",
-        name: ""
-    });
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    name: ""
+  });
 
-    const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
+  const [validated, setValidated] = useState(false);
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+  const validate = () => {
+    let newErrors = {};
+    if (!formData.name) newErrors.name = "Name is mandatory";
+    if (!formData.username) newErrors.username = "Username is mandatory";
+    if (!formData.password) newErrors.password = "Password is mandatory";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    const validate = () => {
-        let newErrors = {};
-        let isValid = true;
-        if (formData.username.length === 0) {
-            newErrors.username = "Username is mandatory";
-            isValid = false;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
 
-        if (formData.password.length === 0) {
-            newErrors.password = "Password is mandatory";
-            isValid = false;
-        }
-
-        if (formData.name.length === 0) {
-            newErrors.name = "Name is mandatory";
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
+    try {
+      const response = await axios.post(`${serverEndpoint}/auth/register`, formData, {
+        withCredentials: true
+      });
+      dispatch({
+        type: SET_USER,
+        payload: response.data.user
+      });
+    } catch (error) {
+      if (error?.response?.status === 401) {
+        setErrors({ message: "User already exists with this email" });
+      } else {
+        setErrors({ message: "Something went wrong, please try again" });
+      }
     }
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    setValidated(true);
+  };
 
-        if (validate()) {
-            const body = {
-                username: formData.username,
-                password: formData.password,
-                name: formData.name
-            };
-            const configuration = {
-                withCredentials: true
-            };
-            try {
-                const response = await axios.post(
-                    `${serverEndpoint}/auth/register`,
-                    body, configuration);
-                dispatch({
-                    type: SET_USER,
-                    payload: response.data.user
-                });
+  const handleGoogleSignin = async (authResponse) => {
+    try {
+      const response = await axios.post(`${serverEndpoint}/auth/google-auth`, {
+        idToken: authResponse.credential
+      }, { withCredentials: true });
 
-            } catch (error) {
-                if (error?.response?.status === 401) {
-                    setErrors({ message: 'User exist with the given email' });
-                } else {
-                    setErrors({ message: 'Something went wrong, please try again' });
-                }
-            }
-        }
-    };
+      dispatch({
+        type: SET_USER,
+        payload: response.data.userDetails
+      });
+    } catch (error) {
+      setErrors({ message: 'Something went wrong during Google sign-in' });
+    }
+  };
 
-    const handleGoogleSignin = async (authResponse) => {
-        try {
-            const response = await axios.post(`${serverEndpoint}/auth/google-auth`, {
-                idToken: authResponse.credential
-            }, {
-                withCredentials: true
-            });
+  return (
+    <section className="ezy__signin6 light d-flex">
+      <Container>
+        <Row className="justify-content-between h-100">
+          <Col lg={6}>
+            <div
+              className="ezy__signin6-bg-holder d-none d-lg-block h-100"
+              style={{
+                backgroundImage: "url(https://cdn.easyfrontend.com/pictures/sign-in-up/sign1.jpg)"
+              }}
+            />
+          </Col>
+          <Col lg={5} className="py-5">
+            <Row className="align-items-center h-100">
+              <Col xs={12}>
+                <Card className="ezy__signin6-form-card">
+                  <Card.Body className="p-0">
+                    <h2 className="ezy__signin6-heading mb-3">Create a New Account</h2>
+                    <p className="mb-4 mb-md-5">
+                      <span className="mb-0 opacity-50 lh-1">Already have an account?</span>
+                      <Button variant="link" className="py-0 text-dark text-decoration-none">
+                        Login
+                      </Button>
+                    </p>
 
-            dispatch({
-                type: SET_USER,
-                payload: response.data.userDetails
-            });
-        } catch (error) {
-            console.log(error);
-            setErrors({ message: 'Something went wrong while google signin' });
-        }
-    };
-
-    const handleGoogleSigninFailure = async (error) => {
-        console.log(error);
-        setErrors({ message: 'Something went wrong while google signin' });
-    };
-
-    return (
-        <div className="container py-5">
-            <div className="row justify-content-center">
-                <div className="col-md-4">
-                    <h2 className="text-center mb-4">Sign up with a new account</h2>
-
-                    {/* Error Alert */}
                     {errors.message && (
-                        <div className="alert alert-danger" role="alert">
-                            {errors.message}
-                        </div>
+                      <div className="alert alert-danger">{errors.message}</div>
                     )}
 
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                            <label htmlFor="name" className="form-label">Name</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                                id="name"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                            />
-                            {errors.name && (
-                                <div className="invalid-feedback">
-                                    {errors.name}
-                                </div>
-                            )}
-                        </div>
+                    <Form noValidate validated={validated} onSubmit={handleSubmit} className="pe-md-4">
+                      <Form.Group className="mb-3">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter your name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          isInvalid={!!errors.name}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                      </Form.Group>
 
-                        <div className="mb-3">
-                            <label htmlFor="username" className="form-label">Username</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.username ? 'is-invalid' : ''}`}
-                                id="username"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                            />
-                            {errors.username && (
-                                <div className="invalid-feedback">
-                                    {errors.username}
-                                </div>
-                            )}
-                        </div>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter username"
+                          name="username"
+                          value={formData.username}
+                          onChange={handleChange}
+                          isInvalid={!!errors.username}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
+                      </Form.Group>
 
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label">Password</label>
-                            <input
-                                type="password"
-                                className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                                id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                            />
-                            {errors.password && (
-                                <div className="invalid-feedback">
-                                    {errors.password}
-                                </div>
-                            )}
-                        </div>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                          type="password"
+                          placeholder="Enter password"
+                          name="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                          isInvalid={!!errors.password}
+                        />
+                        <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+                      </Form.Group>
 
-                        <div className="d-grid">
-                            <button type="submit" className="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
+                      <Button variant="" type="submit" className="ezy__signin6-btn-submit w-100">
+                        Register
+                      </Button>
+                    </Form>
 
-                    <div className="text-center">
-                        <div className="my-4 d-flex align-items-center text-muted">
-                            <hr className="flex-grow-1" />
-                            <span className="px-2">OR</span>
-                            <hr className="flex-grow-1" />
-                        </div>
-                        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-                            <GoogleLogin
-                                onSuccess={handleGoogleSignin}
-                                onError={handleGoogleSigninFailure}
-                            />
-                        </GoogleOAuthProvider>
+                    <div className="position-relative ezy__signin6-or-separator">
+                      <hr className="my-4 my-md-5" />
+                      <span className="px-2">Or</span>
                     </div>
-                </div>
-            </div>
-        </div>
-    );
+
+                    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+                      <GoogleLogin onSuccess={handleGoogleSignin} onError={() => setErrors({ message: 'Google Sign-in failed' })} />
+                    </GoogleOAuthProvider>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Container>
+    </section>
+  );
 }
 
 export default Register;
