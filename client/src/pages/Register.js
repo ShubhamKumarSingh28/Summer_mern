@@ -61,10 +61,12 @@ function Register() {
 
       dispatch({
         type: SET_USER,
-        payload: response.data.userDetails
+        payload: response.data.user
       });
     } catch (error) {
+      console.log(error);
       setErrors({ message: 'Something went wrong during Google sign-in' });
+
     }
   };
 
